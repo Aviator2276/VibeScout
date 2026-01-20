@@ -99,3 +99,18 @@ class TeamInfoUpdateSchema(Schema):
     avg_shuttle: Optional[float] = None
     avg_auto_fuel: Optional[float] = None
     avg_climb_points: Optional[float] = None
+
+
+class PrescouttingUpdateSchema(Schema):
+    prescout_drivetrain: Optional[str] = None
+    prescout_hopper_size: Optional[int] = None
+    prescout_intake_type: Optional[str] = None
+    prescout_rotate_yaw: Optional[bool] = None
+    prescout_rotate_pitch: Optional[bool] = None
+    prescout_self_reported_accuracy: Optional[float] = None
+    prescout_unload_time: Optional[float] = None
+    prescout_range: Optional[str] = None
+    prescout_climber: Optional[str] = None
+    prescout_climber_auto: Optional[bool] = None
+    prescout_self_reported_auto_shoot: Optional[int] = None
+    prescout_additional_comments: Optional[str] = None
