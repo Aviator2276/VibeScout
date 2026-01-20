@@ -39,6 +39,7 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
               flexDirection: 'row',
               height: 60 + insets.bottom,
               width: '100%',
+              paddingTop: 10,
               paddingBottom: insets.bottom,
               borderTopWidth: 1,
               borderTopColor: '#E5E5E5',
@@ -119,6 +120,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    marginTop: 4,
+    marginTop: 2,
   },
 });
