@@ -1,15 +1,15 @@
 import { Center } from '@/components/ui/center';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AdaptiveSafeArea } from '@/components/adaptive-safe-area';
 
 export default function RecordsScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-background-0">
-      <Center className="flex-1 p-4">
-        <Heading className="font-bold text-2xl">Records</Heading>
-        <Text className="p-4 text-center">View your scouting records</Text>
+    <AdaptiveSafeArea>
+      <Center className="h-full">
+        <Heading size='3xl'>Records</Heading>
+        <Text className="p-4">View your scouting records</Text>
       </Center>
-    </SafeAreaView>
+    </AdaptiveSafeArea>
   );
 }

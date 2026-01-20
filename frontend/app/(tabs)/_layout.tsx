@@ -1,21 +1,15 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { HapticTab } from '@/components/haptic-tab';
+import { AdaptiveTabBar } from '@/components/adaptive-tab-bar';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 
 export default function TabLayout() {
   return (
     <Tabs
+      tabBar={(props) => <AdaptiveTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarStyle: {
-          height: 60,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-        },
       }}>
       <Tabs.Screen
         name="index"
@@ -32,10 +26,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="scouting"
+        name="teams"
         options={{
-          title: 'Scouting',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text.magnifyingglass" color={color} />,
+          title: 'Teams',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.3.fill" color={color} />,
         }}
       />
       <Tabs.Screen

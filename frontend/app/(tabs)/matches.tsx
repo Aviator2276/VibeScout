@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AdaptiveSafeArea } from '@/components/adaptive-safe-area';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
 import { MatchCard } from '@/components/match-card';
 import { Match } from '@/types/match';
 import { getMatches } from '@/api/matches';
+import { Center } from '@/components/ui/center';
+import { HStack } from '@/components/ui/hstack';
+import { Badge, BadgeText, BadgeIcon } from '@/components/ui/badge';
 
 export default function MatchesScreen() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -33,14 +36,20 @@ export default function MatchesScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-0">
-      <View className="flex-1 px-4">
-        <Heading className="font-bold text-2xl py-4">Matches</Heading>
+    <AdaptiveSafeArea>
+      <View className="p-4">
+        <HStack className="flex justify-between">
+          <Heading size='3xl' className="pb-2">Matches</Heading>
+          <Badge size="lg" variant='solid' action="info">
+            <BadgeText>COMPCODE</BadgeText>
+            <BadgeIcon className="ml-2" />
+          </Badge>
+        </HStack>
         
         {loading ? (
-          <View className="flex-1 justify-center items-center">
+          <Center className="h-full">
             <ActivityIndicator size="large" />
-          </View>
+          </Center>
         ) : (
           <FlatList
             data={matches}
@@ -58,6 +67,6 @@ export default function MatchesScreen() {
           />
         )}
       </View>
-    </SafeAreaView>
+    </AdaptiveSafeArea>
   );
 }
