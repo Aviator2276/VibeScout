@@ -5,7 +5,8 @@ from .models import Team, Competition, TeamInfo
 from .schemas import (
     TeamSchema, TeamCreateSchema, TeamUpdateSchema,
     CompetitionSchema, CompetitionCreateSchema, CompetitionUpdateSchema,
-    TeamInfoSchema, TeamInfoCreateSchema, TeamInfoUpdateSchema
+    TeamInfoSchema, TeamInfoCreateSchema, TeamInfoUpdateSchema,
+    PrescouttingUpdateSchema
 )
 
 api = NinjaAPI()
@@ -119,6 +120,15 @@ def delete_team_info(request, team_info_id: int):
     team_info = get_object_or_404(TeamInfo, id=team_info_id)
     team_info.delete()
     return {"success": True}
+
+
+@api.patch("/team-info/{team_info_id}/prescouting", response=TeamInfoSchema)
+def update_prescouting(request, team_info_id: int, payload: PrescouttingUpdateSchema):
+    team_info = get_object_or_404(TeamInfo, id=team_info_id)
+    for attr, value in payload.dict(exclude_unset=True).items():
+        setattr(team_info, attr, value)
+    team_info.save()
+    return team_info
 
 
 @api.get("/teams/{team_id}/competitions", response=List[CompetitionSchema])
