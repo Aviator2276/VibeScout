@@ -82,3 +82,48 @@ class TeamInfo(models.Model):
     class Meta:
         ordering = ['-ranking_points']
         unique_together = ['team', 'competition']
+
+
+class Match(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='matches')
+    
+    blue_team_1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='blue_1_matches')
+    blue_team_2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='blue_2_matches')
+    blue_team_3 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='blue_3_matches')
+    red_team_1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='red_1_matches')
+    red_team_2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='red_2_matches')
+    red_team_3 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='red_3_matches')
+    
+    total_points = models.IntegerField(default=0)
+    total_blue_fuels = models.IntegerField(default=0)
+    total_red_fuels = models.IntegerField(default=0)
+    
+    blue_1_auto_fuel = models.IntegerField(default=0)
+    blue_2_auto_fuel = models.IntegerField(default=0)
+    blue_3_auto_fuel = models.IntegerField(default=0)
+    red_1_auto_fuel = models.IntegerField(default=0)
+    red_2_auto_fuel = models.IntegerField(default=0)
+    red_3_auto_fuel = models.IntegerField(default=0)
+    
+    blue_1_teleop_fuel = models.IntegerField(default=0)
+    blue_2_teleop_fuel = models.IntegerField(default=0)
+    blue_3_teleop_fuel = models.IntegerField(default=0)
+    red_1_teleop_fuel = models.IntegerField(default=0)
+    red_2_teleop_fuel = models.IntegerField(default=0)
+    red_3_teleop_fuel = models.IntegerField(default=0)
+    
+    blue_1_fuel_scored = models.IntegerField(default=0)
+    blue_2_fuel_scored = models.IntegerField(default=0)
+    blue_3_fuel_scored = models.IntegerField(default=0)
+    red_1_fuel_scored = models.IntegerField(default=0)
+    red_2_fuel_scored = models.IntegerField(default=0)
+    red_3_fuel_scored = models.IntegerField(default=0)
+    
+    calculated_points = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"Match - {self.competition.name}"
+    
+    class Meta:
+        ordering = ['-id']
+        verbose_name_plural = 'Matches'

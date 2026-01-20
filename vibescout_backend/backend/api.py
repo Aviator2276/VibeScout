@@ -1,12 +1,12 @@
 from ninja import NinjaAPI
 from typing import List
 from django.shortcuts import get_object_or_404
-from .models import Team, Competition, TeamInfo
+from .models import Team, Competition, TeamInfo, Match
 from .schemas import (
     TeamSchema, TeamCreateSchema, TeamUpdateSchema,
     CompetitionSchema, CompetitionCreateSchema, CompetitionUpdateSchema,
     TeamInfoSchema, TeamInfoCreateSchema, TeamInfoUpdateSchema,
-    PrescouttingUpdateSchema
+    PrescouttingUpdateSchema, MatchSchema, MatchCreateSchema, MatchUpdateSchema
 )
 
 api = NinjaAPI()
@@ -148,3 +148,69 @@ def get_competition_leaderboard(request, competition_id: int):
     return TeamInfo.objects.select_related('team', 'competition').filter(
         competition_id=competition_id
     ).order_by('-ranking_points')
+
+
+@api.get("/matches", response=List[MatchSchema])
+def list_matches(request, competition_id: int = None):
+    queryset = Match.objects.select_related(
+        'competition', 'blue_team_1', 'blue_team_2', 'blue_team_3',
+        'red_team_1', 'red_team_2', 'red_team_3'
+    ).all()
+    if competition_id:
+        queryset = queryset.filter(competition_id=competition_id)
+    return queryset
+
+
+@api.get("/matches/{match_id}", response=MatchSchema)
+def get_match(request, match_id: int):
+    return get_object_or_404(
+        Match.objects.select_related(
+            'competition', 'blue_team_1', 'blue_team_2', 'blue_team_3',
+            'red_team_1', 'red_team_2', 'red_team_3'
+        ),
+        id=match_id
+    )
+
+
+@api.post("/matches", response=MatchSchema)
+def create_match(request, payload: MatchCreateSchema):
+    competition = get_object_or_404(Competition, id=payload.competition_id)
+    blue_team_1 = get_object_or_404(Team, id=payload.blue_team_1_id)
+    blue_team_2 = get_object_or_404(Team, id=payload.blue_team_2_id)
+    blue_team_3 = get_object_or_404(Team, id=payload.blue_team_3_id)
+    red_team_1 = get_object_or_404(Team, id=payload.red_team_1_id)
+    red_team_2 = get_object_or_404(Team, id=payload.red_team_2_id)
+    red_team_3 = get_object_or_404(Team, id=payload.red_team_3_id)
+    
+    data = payload.dict(exclude={
+        'competition_id', 'blue_team_1_id', 'blue_team_2_id', 'blue_team_3_id',
+        'red_team_1_id', 'red_team_2_id', 'red_team_3_id'
+    })
+    
+    match = Match.objects.create(
+        competition=competition,
+        blue_team_1=blue_team_1,
+        blue_team_2=blue_team_2,
+        blue_team_3=blue_team_3,
+        red_team_1=red_team_1,
+        red_team_2=red_team_2,
+        red_team_3=red_team_3,
+        **data
+    )
+    return match
+
+
+@api.put("/matches/{match_id}", response=MatchSchema)
+def update_match(request, match_id: int, payload: MatchUpdateSchema):
+    match = get_object_or_404(Match, id=match_id)
+    for attr, value in payload.dict(exclude_unset=True).items():
+        setattr(match, attr, value)
+    match.save()
+    return match
+
+
+@api.delete("/matches/{match_id}")
+def delete_match(request, match_id: int):
+    match = get_object_or_404(Match, id=match_id)
+    match.delete()
+    return {"success": True}

@@ -1,6 +1,6 @@
 from ninja import Schema, ModelSchema
 from typing import Optional
-from .models import Team, Competition, TeamInfo
+from .models import Team, Competition, TeamInfo, Match
 
 
 class TeamSchema(ModelSchema):
@@ -114,3 +114,84 @@ class PrescouttingUpdateSchema(Schema):
     prescout_climber_auto: Optional[bool] = None
     prescout_self_reported_auto_shoot: Optional[int] = None
     prescout_additional_comments: Optional[str] = None
+
+
+class MatchSchema(ModelSchema):
+    blue_team_1: TeamSchema
+    blue_team_2: TeamSchema
+    blue_team_3: TeamSchema
+    red_team_1: TeamSchema
+    red_team_2: TeamSchema
+    red_team_3: TeamSchema
+    competition: CompetitionSchema
+    
+    class Meta:
+        model = Match
+        fields = [
+            'id', 'competition', 'blue_team_1', 'blue_team_2', 'blue_team_3',
+            'red_team_1', 'red_team_2', 'red_team_3', 'total_points',
+            'total_blue_fuels', 'total_red_fuels', 'blue_1_auto_fuel',
+            'blue_2_auto_fuel', 'blue_3_auto_fuel', 'red_1_auto_fuel',
+            'red_2_auto_fuel', 'red_3_auto_fuel', 'blue_1_teleop_fuel',
+            'blue_2_teleop_fuel', 'blue_3_teleop_fuel', 'red_1_teleop_fuel',
+            'red_2_teleop_fuel', 'red_3_teleop_fuel', 'blue_1_fuel_scored',
+            'blue_2_fuel_scored', 'blue_3_fuel_scored', 'red_1_fuel_scored',
+            'red_2_fuel_scored', 'red_3_fuel_scored', 'calculated_points'
+        ]
+
+
+class MatchCreateSchema(Schema):
+    competition_id: int
+    blue_team_1_id: int
+    blue_team_2_id: int
+    blue_team_3_id: int
+    red_team_1_id: int
+    red_team_2_id: int
+    red_team_3_id: int
+    total_points: int = 0
+    total_blue_fuels: int = 0
+    total_red_fuels: int = 0
+    blue_1_auto_fuel: int = 0
+    blue_2_auto_fuel: int = 0
+    blue_3_auto_fuel: int = 0
+    red_1_auto_fuel: int = 0
+    red_2_auto_fuel: int = 0
+    red_3_auto_fuel: int = 0
+    blue_1_teleop_fuel: int = 0
+    blue_2_teleop_fuel: int = 0
+    blue_3_teleop_fuel: int = 0
+    red_1_teleop_fuel: int = 0
+    red_2_teleop_fuel: int = 0
+    red_3_teleop_fuel: int = 0
+    blue_1_fuel_scored: int = 0
+    blue_2_fuel_scored: int = 0
+    blue_3_fuel_scored: int = 0
+    red_1_fuel_scored: int = 0
+    red_2_fuel_scored: int = 0
+    red_3_fuel_scored: int = 0
+    calculated_points: int = 0
+
+
+class MatchUpdateSchema(Schema):
+    total_points: Optional[int] = None
+    total_blue_fuels: Optional[int] = None
+    total_red_fuels: Optional[int] = None
+    blue_1_auto_fuel: Optional[int] = None
+    blue_2_auto_fuel: Optional[int] = None
+    blue_3_auto_fuel: Optional[int] = None
+    red_1_auto_fuel: Optional[int] = None
+    red_2_auto_fuel: Optional[int] = None
+    red_3_auto_fuel: Optional[int] = None
+    blue_1_teleop_fuel: Optional[int] = None
+    blue_2_teleop_fuel: Optional[int] = None
+    blue_3_teleop_fuel: Optional[int] = None
+    red_1_teleop_fuel: Optional[int] = None
+    red_2_teleop_fuel: Optional[int] = None
+    red_3_teleop_fuel: Optional[int] = None
+    blue_1_fuel_scored: Optional[int] = None
+    blue_2_fuel_scored: Optional[int] = None
+    blue_3_fuel_scored: Optional[int] = None
+    red_1_fuel_scored: Optional[int] = None
+    red_2_fuel_scored: Optional[int] = None
+    red_3_fuel_scored: Optional[int] = None
+    calculated_points: Optional[int] = None
