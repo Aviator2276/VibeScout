@@ -79,6 +79,15 @@ def get_competition_leaderboard(request, competition_id: int):
     ).order_by('-ranking_points')
 
 
+@api.get("/competitions/{code}/matches", response=List[MatchSchema])
+def get_competition_matches_by_code(request, code: str):
+    competition = get_object_or_404(Competition, code=code)
+    return Match.objects.select_related(
+        'competition', 'blue_team_1', 'blue_team_2', 'blue_team_3',
+        'red_team_1', 'red_team_2', 'red_team_3'
+    ).filter(competition=competition).order_by('match_number')
+
+
 @api.get("/matches", response=List[MatchSchema])
 def list_matches(request, competition_id: int = None):
     queryset = Match.objects.select_related(

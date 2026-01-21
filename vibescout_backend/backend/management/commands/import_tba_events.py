@@ -58,7 +58,8 @@ class Command(BaseCommand):
         event_info = tba.event(event_key)
         
         competition, created = Competition.objects.get_or_create(
-            name=event_info['name']
+            code=event_key,
+            defaults={'name': event_info['name']}
         )
         if created:
             self.stdout.write(f'  Created competition: {competition.name}')

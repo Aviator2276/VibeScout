@@ -12,7 +12,7 @@ class TeamSchema(ModelSchema):
 class CompetitionSchema(ModelSchema):
     class Meta:
         model = Competition
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'code']
 
 
 class TeamInfoSchema(ModelSchema):
