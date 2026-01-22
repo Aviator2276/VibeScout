@@ -130,6 +130,15 @@ class Command(BaseCommand):
         total_blue_fuels = blue_auto_cells + blue_teleop_cells
         total_red_fuels = red_auto_cells + red_teleop_cells
         
+        # Map 2020 climb values to 2026 format: Park->L1, Hang->L3
+        def map_climb(endgame_value):
+            if endgame_value == 'Park':
+                return 'L1'
+            elif endgame_value == 'Hang':
+                return 'L3'
+            else:
+                return 'None'
+        
         match, created = Match.objects.update_or_create(
             competition=competition,
             match_number=match_number,
@@ -143,24 +152,12 @@ class Command(BaseCommand):
                 'total_points': blue_score + red_score,
                 'total_blue_fuels': total_blue_fuels,
                 'total_red_fuels': total_red_fuels,
-                'blue_1_auto_fuel': blue_breakdown.get('autoCellsBottom', 0) + blue_breakdown.get('autoCellsOuter', 0) + blue_breakdown.get('autoCellsInner', 0),
-                'blue_2_auto_fuel': 0,
-                'blue_3_auto_fuel': 0,
-                'red_1_auto_fuel': red_breakdown.get('autoCellsBottom', 0) + red_breakdown.get('autoCellsOuter', 0) + red_breakdown.get('autoCellsInner', 0),
-                'red_2_auto_fuel': 0,
-                'red_3_auto_fuel': 0,
-                'blue_1_teleop_fuel': blue_breakdown.get('teleopCellsBottom', 0) + blue_breakdown.get('teleopCellsOuter', 0) + blue_breakdown.get('teleopCellsInner', 0),
-                'blue_2_teleop_fuel': 0,
-                'blue_3_teleop_fuel': 0,
-                'red_1_teleop_fuel': red_breakdown.get('teleopCellsBottom', 0) + red_breakdown.get('teleopCellsOuter', 0) + red_breakdown.get('teleopCellsInner', 0),
-                'red_2_teleop_fuel': 0,
-                'red_3_teleop_fuel': 0,
-                'blue_1_fuel_scored': total_blue_fuels,
-                'blue_2_fuel_scored': 0,
-                'blue_3_fuel_scored': 0,
-                'red_1_fuel_scored': total_red_fuels,
-                'red_2_fuel_scored': 0,
-                'red_3_fuel_scored': 0,
+                'blue_1_climb': map_climb(blue_breakdown.get('endgameRobot1', 'None')),
+                'blue_2_climb': map_climb(blue_breakdown.get('endgameRobot2', 'None')),
+                'blue_3_climb': map_climb(blue_breakdown.get('endgameRobot3', 'None')),
+                'red_1_climb': map_climb(red_breakdown.get('endgameRobot1', 'None')),
+                'red_2_climb': map_climb(red_breakdown.get('endgameRobot2', 'None')),
+                'red_3_climb': map_climb(red_breakdown.get('endgameRobot3', 'None')),
                 'calculated_points': blue_score + red_score,
             }
         )

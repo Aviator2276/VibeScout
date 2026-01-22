@@ -86,6 +86,13 @@ class TeamInfo(models.Model):
 
 
 class Match(models.Model):
+    CLIMB_CHOICES = [
+        ('None', 'None'),
+        ('L1', 'Level 1'),
+        ('L2', 'Level 2'),
+        ('L3', 'Level 3'),
+    ]
+    
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='matches')
     match_number = models.IntegerField()
     blue_team_1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='blue_1_matches')
@@ -119,6 +126,13 @@ class Match(models.Model):
     red_1_fuel_scored = models.IntegerField(default=0)
     red_2_fuel_scored = models.IntegerField(default=0)
     red_3_fuel_scored = models.IntegerField(default=0)
+
+    blue_1_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
+    blue_2_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
+    blue_3_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
+    red_1_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
+    red_2_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
+    red_3_climb = models.CharField(max_length=10, choices=CLIMB_CHOICES, default='None')
     
     calculated_points = models.IntegerField(default=0)
     

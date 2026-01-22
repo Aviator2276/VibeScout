@@ -68,7 +68,9 @@ class MatchSchema(ModelSchema):
             'blue_2_teleop_fuel', 'blue_3_teleop_fuel', 'red_1_teleop_fuel',
             'red_2_teleop_fuel', 'red_3_teleop_fuel', 'blue_1_fuel_scored',
             'blue_2_fuel_scored', 'blue_3_fuel_scored', 'red_1_fuel_scored',
-            'red_2_fuel_scored', 'red_3_fuel_scored', 'calculated_points'
+            'red_2_fuel_scored', 'red_3_fuel_scored', 'blue_1_climb',
+            'blue_2_climb', 'blue_3_climb', 'red_1_climb', 'red_2_climb',
+            'red_3_climb', 'calculated_points'
         ]
 
 
