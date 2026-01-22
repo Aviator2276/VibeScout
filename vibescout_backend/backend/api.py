@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from .models import Team, Competition, TeamInfo, Match
 from .schemas import (
     TeamSchema, CompetitionSchema,
-    TeamInfoSchema, TeamInfoCreateSchema, TeamInfoUpdateSchema,
-    PrescouttingUpdateSchema, MatchSchema, MatchCreateSchema, MatchUpdateSchema
+    TeamInfoSchema, 
+    PrescouttingUpdateSchema, MatchSchema
 )
 
 api = NinjaAPI()
