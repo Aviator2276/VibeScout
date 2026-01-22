@@ -5,58 +5,83 @@ import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Match } from '@/types/match';
+import { Divider } from '@/components/ui/divider';
+import {
+  Table,
+  TableBody,
+  TableData,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
+import { Badge, BadgeText } from './ui/badge';
 
 interface MatchCardProps {
   match: Match;
   onScout: (match: Match) => void;
+  searchQuery?: string;
 }
 
-function getMatchLabel(match: Match): string {
-  const typeAbbrev: Record<string, string> = {
-    Qualification: 'Qual',
-    Quarterfinal: 'QF',
-    Semifinal: 'SF',
-    Final: 'Final',
-    Practice: 'Practice',
+export function MatchCard({ match, onScout, searchQuery = '' }: MatchCardProps) {
+  const blueTeams = [match.blue_team_1, match.blue_team_2, match.blue_team_3];
+  const redTeams = [match.red_team_1, match.red_team_2, match.red_team_3];
+
+  // Check if a team number matches the search query
+  const isTeamHighlighted = (teamNumber: number): boolean => {
+    if (!searchQuery.trim() || !searchQuery.startsWith('@')) {
+      return false;
+    }
+    const teamQuery = searchQuery.slice(1);
+    if (teamQuery.length < 2) {
+      return false;
+    }
+    return teamNumber.toString().includes(teamQuery);
   };
-  return `${typeAbbrev[match.matchType] || match.matchType} #${match.matchNumber}`;
-}
 
-export function MatchCard({ match, onScout }: MatchCardProps) {
   return (
     <Card variant="outline" size="md" className="mb-3 p-4">
-      <VStack space="sm">
+      <VStack space="md">
         <HStack className="items-center justify-between">
-          <HStack space="md" className="items-center flex-1">
+          <VStack space="xs">
             <Text className="text-lg font-bold text-typography-900">
-              {getMatchLabel(match)}
+              Match #{match.match_number}
             </Text>
-            <Text size="sm" className="text-typography-500">
-              {}
-            </Text>
-          </HStack>
+          </VStack>
           <Button size="sm" action="primary" onPress={() => onScout(match)}>
             <ButtonText>Scout</ButtonText>
           </Button>
         </HStack>
-        <HStack space="sm">
-          {match.redAlliance.map((team, index) => (
-            <Text
-              key={`red-${index}`}
-              className="text-red-600 font-medium"
-            >
-              {team}
-            </Text>
-          ))}
-          {match.blueAlliance.map((team, index) => (
-            <Text
-              key={`blue-${index}`}
-              className="text-blue-600 font-medium"
-            >
-              {team}
-            </Text>
-          ))}
-        </HStack>
+
+        <VStack space="xs">
+          <HStack space="xs">
+            {blueTeams.map((team, index) => {
+              const isHighlighted = isTeamHighlighted(team.number);
+              return (
+                <Badge
+                  size="lg"
+                  variant="solid"
+                  key={`blue-${index}`}
+                  className={isHighlighted ? "!bg-amber-600 font-medium flex-1" : "!bg-blue-600 font-medium flex-1"}
+                >
+                  <BadgeText>{team.number}</BadgeText>
+                </Badge>
+              );
+            })}
+            {redTeams.map((team, index) => {
+              const isHighlighted = isTeamHighlighted(team.number);
+              return (
+                <Badge 
+                  size="lg"
+                  variant="solid"
+                  key={`red-${index}`} 
+                  className={isHighlighted ? "!bg-amber-600 font-medium flex-1" : "!bg-red-600 font-medium flex-1"}
+                >
+                  <BadgeText>{team.number}</BadgeText>
+                </Badge>
+              );
+            })}
+          </HStack>
+        </VStack>
       </VStack>
     </Card>
   );

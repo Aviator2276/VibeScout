@@ -128,7 +128,7 @@ export default function OnboardingScreen() {
                         {loadingCompetitions ? (
                           <SelectItem label="Loading..." value="" isDisabled />
                         ) : competitions.length === 0 ? (
-                          <SelectItem label="No competitions available" value="" isDisabled />
+                          <SelectItem label="No competitions available. Check your internet connection." value="" isDisabled />
                         ) : (
                           competitions.map((comp) => {
                             const year = extractYear(comp.code);
