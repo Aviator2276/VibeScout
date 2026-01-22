@@ -80,3 +80,7 @@ def create_shot_timing(request, competition_code: str, match_number: int, team_n
     )
     return shot_timing
 
+@api.get("/scary-api")
+def scary_api(request):
+    return {"scary": "67"}
+
