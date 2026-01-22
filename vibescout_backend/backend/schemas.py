@@ -1,6 +1,6 @@
 from ninja import Schema, ModelSchema
 from typing import Optional
-from .models import Team, Competition, TeamInfo, Match
+from .models import Team, Competition, TeamInfo, Match, ShotTiming
 
 
 class TeamSchema(ModelSchema):
@@ -70,3 +70,16 @@ class MatchSchema(ModelSchema):
             'blue_2_fuel_scored', 'blue_3_fuel_scored', 'red_1_fuel_scored',
             'red_2_fuel_scored', 'red_3_fuel_scored', 'calculated_points'
         ]
+
+
+class ShotTimingSchema(ModelSchema):
+    team: TeamSchema
+    
+    class Meta:
+        model = ShotTiming
+        fields = ['team', 'start_shot_time', 'end_shot_time']
+
+
+class ShotTimingCreateSchema(Schema):
+    start_shot_time: float
+    end_shot_time: float

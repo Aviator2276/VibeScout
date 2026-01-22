@@ -128,3 +128,16 @@ class Match(models.Model):
     class Meta:
         ordering = ['-id']
         verbose_name_plural = 'Matches'
+
+
+class ShotTiming(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='shot_timings')
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='shot_timings')
+    start_shot_time = models.FloatField()
+    end_shot_time = models.FloatField()
+    
+    def __str__(self):
+        return f"Team {self.team.number} - Match {self.match.match_number}: {self.start_shot_time}s - {self.end_shot_time}s"
+    
+    class Meta:
+        ordering = ['match', 'start_shot_time']

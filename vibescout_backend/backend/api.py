@@ -1,11 +1,12 @@
 from ninja import NinjaAPI
 from typing import List
 from django.shortcuts import get_object_or_404
-from .models import Team, Competition, TeamInfo, Match
+from .models import Team, Competition, TeamInfo, Match, ShotTiming
 from .schemas import (
     TeamSchema, CompetitionSchema,
     TeamInfoSchema, 
-    PrescouttingUpdateSchema, MatchSchema
+    PrescouttingUpdateSchema, MatchSchema,
+    ShotTimingSchema, ShotTimingCreateSchema
 )
 
 api = NinjaAPI()
@@ -65,4 +66,17 @@ def get_competition_matches_by_code(request, code: str):
         'competition', 'blue_team_1', 'blue_team_2', 'blue_team_3',
         'red_team_1', 'red_team_2', 'red_team_3'
     ).filter(competition=competition).order_by('match_number')
+
+@api.post("/shot-timings", response=ShotTimingSchema)
+def create_shot_timing(request, competition_code: str, match_number: int, team_number: int, payload: ShotTimingCreateSchema):
+    competition = get_object_or_404(Competition, code=competition_code)
+    match = get_object_or_404(Match, competition=competition, match_number=match_number)
+    team = get_object_or_404(Team, number=team_number)
+    shot_timing = ShotTiming.objects.create(
+        match=match,
+        team=team,
+        start_shot_time=payload.start_shot_time,
+        end_shot_time=payload.end_shot_time
+    )
+    return shot_timing
 
