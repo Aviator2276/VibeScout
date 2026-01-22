@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Dimensions } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 export type Orientation = 'portrait' | 'landscape-left' | 'landscape-right';

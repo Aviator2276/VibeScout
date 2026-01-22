@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useOrientation, isLandscape as checkLandscape } from '@/hooks/use-orientation';
 import { Text } from '@/components/ui/text';
+import { Box } from '@/components/ui/box';
 
 export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const orientation = useOrientation();
@@ -15,10 +16,11 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
   const isOnRight = orientation === 'landscape-right';
 
   return (
-    <View
-      style={[
-        styles.container,
-        isLandscapeMode
+    <Box
+      className={`bg-background-50 ${isLandscapeMode ? (isOnRight ? 'border-l border-outline-100' : 'border-r border-outline-100') : 'border-t border-outline-100'}`}
+      style={{
+        ...styles.container,
+        ...(isLandscapeMode
           ? {
               position: 'absolute',
               left: isOnRight ? undefined : 0,
@@ -29,10 +31,6 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
               width: 70,
               paddingTop: insets.top + 10,
               paddingBottom: insets.bottom + 10,
-              borderLeftWidth: isOnRight ? 1 : 0,
-              borderRightWidth: isOnRight ? 0 : 1,
-              borderLeftColor: '#E5E5E5',
-              borderRightColor: '#E5E5E5',
               zIndex: 100,
             }
           : {
@@ -41,10 +39,8 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
               width: '100%',
               paddingTop: 10,
               paddingBottom: insets.bottom,
-              borderTopWidth: 1,
-              borderTopColor: '#E5E5E5',
-            },
-      ]}
+            }),
+      }}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -80,10 +76,10 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
             accessibilityLabel={options.tabBarAccessibilityLabel}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={[
-              styles.tab,
-              isLandscapeMode ? styles.tabLandscape : styles.tabPortrait,
-            ]}
+            style={{
+              ...styles.tab,
+              ...(isLandscapeMode ? styles.tabLandscape : styles.tabPortrait),
+            }}
           >
             {options.tabBarIcon?.({ focused: isFocused, color, size: 24 })}
             <Text
@@ -96,14 +92,12 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
           </Pressable>
         );
       })}
-    </View>
+    </Box>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F8F8F8',
-  },
+  container: {},
   tab: {
     alignItems: 'center',
     justifyContent: 'center',

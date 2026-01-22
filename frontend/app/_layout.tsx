@@ -1,18 +1,17 @@
-export {
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  initialRouteName: '(tabs)',
-};
-
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { useEffect, useState } from 'react';
+import { getCompetitionCode } from '@/utils/storage';
 import '../global.css';
 
 export default function AppLayout() {
+
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <GluestackUIProvider mode="dark">
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </GluestackUIProvider>
   );
 }

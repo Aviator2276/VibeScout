@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, ViewProps } from 'react-native';
+import { ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useOrientation, isLandscape as checkLandscape } from '@/hooks/use-orientation';
+import { Box } from '@/components/ui/box';
 
 interface AdaptiveSafeAreaProps extends ViewProps {
   children: React.ReactNode;
@@ -18,20 +19,18 @@ export function AdaptiveSafeArea({ children, style, ...props }: AdaptiveSafeArea
   const tabBarWidth = 70;
 
   return (
-    <View
-      style={[
-        {
-          flex: 1,
-          paddingTop: insets.top,
-          paddingBottom: isLandscapeMode ? insets.bottom : 0,
-          paddingLeft: isLandscapeMode ? (isOnRight ? insets.left : tabBarWidth) : insets.left,
-          paddingRight: isLandscapeMode ? (isOnRight ? tabBarWidth : insets.right) : insets.right,
-        },
-        style,
-      ]}
+    <Box
+      className="bg-background-0 flex-1"
+      style={{
+        paddingTop: insets.top,
+        paddingBottom: isLandscapeMode ? insets.bottom : 0,
+        paddingLeft: isLandscapeMode ? (isOnRight ? insets.left : tabBarWidth) : insets.left,
+        paddingRight: isLandscapeMode ? (isOnRight ? tabBarWidth : insets.right) : insets.right,
+        ...(typeof style === 'object' && style !== null ? style : {}),
+      }}
       {...props}
     >
       {children}
-    </View>
+    </Box>
   );
 }

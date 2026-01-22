@@ -1,7 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useOrientation } from '@/hooks/use-orientation';
+import { Box } from './ui/box';
 
 type IconSymbolName = 'house.fill' | 'sportscourt.fill' | 'doc.text.magnifyingglass' | 'list.bullet.clipboard.fill';
 
@@ -16,8 +16,8 @@ export function RotatableTabIcon({ name, color, size = 28 }: RotatableTabIconPro
   const rotation = orientation === 'landscape' ? '90deg' : '0deg';
 
   return (
-    <View style={{ transform: [{ rotate: rotation }] }}>
+    <Box style={{ transform: [{ rotate: rotation }] }}>
       <IconSymbol name={name} color={color} size={size} />
-    </View>
+    </Box>
   );
 }

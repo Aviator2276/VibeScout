@@ -11,14 +11,6 @@ interface MatchCardProps {
   onScout: (match: Match) => void;
 }
 
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-}
-
 function getMatchLabel(match: Match): string {
   const typeAbbrev: Record<string, string> = {
     Qualification: 'Qual',
@@ -34,22 +26,19 @@ export function MatchCard({ match, onScout }: MatchCardProps) {
   return (
     <Card variant="outline" size="md" className="mb-3 p-4">
       <VStack space="sm">
-        {/* Top row: Match title, time, and Scout button */}
         <HStack className="items-center justify-between">
           <HStack space="md" className="items-center flex-1">
             <Text className="text-lg font-bold text-typography-900">
               {getMatchLabel(match)}
             </Text>
             <Text size="sm" className="text-typography-500">
-              {formatTime(match.startTime)}
+              {}
             </Text>
           </HStack>
           <Button size="sm" action="primary" onPress={() => onScout(match)}>
             <ButtonText>Scout</ButtonText>
           </Button>
         </HStack>
-
-        {/* Bottom row: Team numbers */}
         <HStack space="sm">
           {match.redAlliance.map((team, index) => (
             <Text
