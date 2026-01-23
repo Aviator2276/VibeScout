@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { setName, setCompetitionCode } from '@/utils/storage';
+import { setName, setCompetitionCode, initDatabase } from '@/utils/storage';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
 import { Button, ButtonText } from '@/components/ui/button';
@@ -32,9 +32,13 @@ export default function OnboardingScreen() {
   const [competitionCode, setCompetitionCodeState] = useState('');
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [loadingCompetitions, setLoadingCompetitions] = useState(true);
+  const [dbReady, setDbReady] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    initDatabase()
+      .then(() => setDbReady(true))
+      .catch((err) => console.error('Failed to init database:', err));
     loadCompetitions();
   }, []);
 
@@ -162,7 +166,7 @@ export default function OnboardingScreen() {
                 size="lg" 
                 action="primary" 
                 onPress={handleComplete}
-                isDisabled={!name || !competitionCode || isCompleting}
+                isDisabled={!name || !competitionCode || isCompleting || !dbReady}
               >
                 <ButtonText>{isCompleting ? 'Setting up...' : 'Get Started'}</ButtonText>
               </Button>

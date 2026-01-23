@@ -2,15 +2,22 @@ import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useOrientation, isLandscape as checkLandscape } from '@/hooks/use-orientation';
+import {
+  useOrientation,
+  isLandscape as checkLandscape,
+} from '@/hooks/use-orientation';
 import { Text } from '@/components/ui/text';
 import { Box } from '@/components/ui/box';
 
-export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function AdaptiveTabBar({
+  state,
+  descriptors,
+  navigation,
+}: BottomTabBarProps) {
   const orientation = useOrientation();
   const insets = useSafeAreaInsets();
   const isLandscapeMode = checkLandscape(orientation);
-  
+
   // In landscape-right (counterclockwise rotation), home bar is on the right
   // In landscape-left (clockwise rotation), home bar is on the left
   const isOnRight = orientation === 'landscape-right';
@@ -82,11 +89,7 @@ export function AdaptiveTabBar({ state, descriptors, navigation }: BottomTabBarP
             }}
           >
             {options.tabBarIcon?.({ focused: isFocused, color, size: 24 })}
-            <Text
-              size="2xs"
-              className="mt-0.5"
-              style={{ color }}
-            >
+            <Text size="2xs" className="mt-0.5" style={{ color }}>
               {label}
             </Text>
           </Pressable>

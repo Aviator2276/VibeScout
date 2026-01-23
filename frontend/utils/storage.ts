@@ -17,6 +17,10 @@ async function getDatabase() {
   return db;
 }
 
+export async function initDatabase(): Promise<void> {
+  await getDatabase();
+}
+
 export async function getSetting(key: string): Promise<string | null> {
   try {
     const database = await getDatabase();
