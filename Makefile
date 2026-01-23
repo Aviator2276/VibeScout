@@ -11,7 +11,7 @@ backend:
 	cd vibescout_backend && uv run python manage.py runserver
 
 frontend:
-	cd frontend && npx expo start
+	cd frontend && npx expo start -c
 
 run:
 	@echo "Starting backend and frontend concurrently..."
