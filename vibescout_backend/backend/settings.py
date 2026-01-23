@@ -132,7 +132,7 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        'https://yourdomain.com',
+        'http://8000--main--django-playground--aviator2277.chargingcourses.com',
         'https://www.yourdomain.com',
         # Add your production frontend URLs here
     ]
