@@ -1,3 +1,17 @@
+"""
+ # Uses the official FMS to get the start time of the first match (actualStartTime) and calculates
+ # the time difference between the other match start times to know when the matches starts.
+ # Basically subtract the first match start from the other match start times and you get the difference.
+ # The only thing you need to do and this scipt doesn't know how to do is get the first match start time.
+ # So put that in the python arguments and you will see instant results.
+ # 
+ # pip install platform yt-dlp
+ # Run Examples:
+ #     If you didn't convert to base64
+ #         python DownloadVideoMatches.py /mnt/f "https://www.youtube.com/watch?v=941HA6kE9JQ" "21:30.10" 25 -u jdthebomb -k <key>
+ #     If you did convert to base64
+ #     python DownloadVideoMatches.py /mnt/f "https://www.youtube.com/watch?v=941HA6kE9JQ" "21:30.10" 25 -t <token>
+"""
 import platform
 import argparse
 import base64
