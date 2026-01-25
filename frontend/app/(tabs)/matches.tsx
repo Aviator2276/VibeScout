@@ -15,6 +15,7 @@ import { VStack } from '@/components/ui/vstack';
 import { ScrollView, ActivityIndicator } from 'react-native';
 import { useApp } from '@/utils/AppContext';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
+import { parseCompetitionCode } from '@/utils/competitionCode';
 
 export default function MatchesScreen() {
   const {
@@ -109,7 +110,7 @@ export default function MatchesScreen() {
                 />
               </Center>
               <Badge size="lg" variant="solid" action="info">
-                <BadgeText>{competitionCode || 'N/A'}</BadgeText>
+                <BadgeText>{parseCompetitionCode(competitionCode)}</BadgeText>
               </Badge>
             </HStack>
           </HStack>

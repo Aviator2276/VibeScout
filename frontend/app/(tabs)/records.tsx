@@ -6,6 +6,7 @@ import { HStack } from '@/components/ui/hstack';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { Badge, BadgeText } from '@/components/ui/badge';
 import { useApp } from '@/utils/AppContext';
+import { parseCompetitionCode } from '@/utils/competitionCode';
 import { Box } from '@/components/ui/box';
 
 export default function RecordsScreen() {
@@ -34,7 +35,7 @@ export default function RecordsScreen() {
                 />
               </Center>
               <Badge size="lg" variant="solid" action="info">
-                <BadgeText>{competitionCode || 'N/A'}</BadgeText>
+                <BadgeText>{parseCompetitionCode(competitionCode)}</BadgeText>
               </Badge>
             </HStack>
           </HStack>

@@ -36,9 +36,21 @@ import {
   SelectTrigger,
 } from '@/components/ui/select';
 import { Competition, getCompetitions } from '@/api/competitions';
+import { cacheMatches } from '@/api/matches';
+import { cacheTeams, cacheTeamInfo } from '@/api/teams';
 import { ChevronDownIcon, Sun, Moon, MonitorCog } from 'lucide-react-native';
+import {
+  parseCompetitionCode as parseCode,
+  extractYear,
+} from '@/utils/competitionCode';
 import Constants from 'expo-constants';
-import { Table, TableBody, TableData, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableData,
+  TableFooter,
+  TableRow,
+} from '@/components/ui/table';
 import { Icon } from '@/components/ui/icon';
 import { ScrollView } from 'react-native';
 
@@ -86,11 +98,6 @@ export default function SettingsScreen() {
     return code.toUpperCase();
   }
 
-  function extractYear(code: string): string | null {
-    const match = code.match(/^(\d{4})/);
-    return match ? match[1] : null;
-  }
-
   async function handleComplete() {
     if (isCompleting) return;
 
@@ -103,9 +110,11 @@ export default function SettingsScreen() {
       await db.delete();
       await db.open();
       await setCompetitionCode(localCompetitionCode);
+      await cacheMatches();
+      await cacheTeams();
+      await cacheTeamInfo();
       setShowCompCodeDialog(false);
       setIsCompleting(false);
-      window.location.reload();
     } catch (error) {
       console.error('Failed to save settings:', error);
       setIsCompleting(false);
@@ -116,10 +125,7 @@ export default function SettingsScreen() {
     try {
       setIsResetting(true);
       await db.delete().then(async () => {
-        console.log('Database successfully deleted');
         await db.open();
-        console.log('Database reinitialized');
-        setIsResetting(false);
       });
       window.location.reload();
     } catch (error) {
@@ -156,7 +162,7 @@ export default function SettingsScreen() {
                 />
               </Center>
               <Badge size="lg" variant="solid" action="info">
-                <BadgeText>{competitionCode || 'N/A'}</BadgeText>
+                <BadgeText>{parseCode(competitionCode)}</BadgeText>
               </Badge>
             </HStack>
           </HStack>
@@ -187,7 +193,7 @@ export default function SettingsScreen() {
                       </TableData>
                     </TableRow>
                     <TableRow>
-                      <TableData>Offline mode</TableData>
+                      <TableData>App Offline mode:</TableData>
                       <TableData>
                         <Badge size="lg" variant="solid" action="error">
                           <BadgeText>Unavailable</BadgeText>
@@ -212,13 +218,15 @@ export default function SettingsScreen() {
                         </Badge>
                       </TableData>
                     </TableRow>
-                    {ping !== null && (
-                      <TableRow>
-                        <TableData>Last ping time:</TableData>
-                        <TableData>{ping} ms</TableData>
-                      </TableRow>
-                    )}
                   </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableData>Last ping time:</TableData>
+                      <TableData>
+                        {ping !== null ? ping + ' ms' : 'Unknown'}
+                      </TableData>
+                    </TableRow>
+                  </TableFooter>
                 </Table>
               </Card>
               <Card variant="outline" size="sm">
