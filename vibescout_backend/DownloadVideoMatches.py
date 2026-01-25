@@ -91,7 +91,7 @@ if args.URL and args.StartTime and args.Folder:
     DownloadYoutubeVideoClip(
         args.URL,
         args.Folder,
-        "Match_1",
+        "Match1",
         StartTime.total_seconds(),
         ((datetime.fromisoformat(Matches[0]["postResultTime"]) - ReferenceTime)+StartTime).total_seconds()
     )
