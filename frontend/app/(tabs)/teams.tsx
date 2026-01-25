@@ -7,6 +7,7 @@ import { HStack } from '@/components/ui/hstack';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { Badge, BadgeText } from '@/components/ui/badge';
 import { useApp } from '@/utils/AppContext';
+import { parseCompetitionCode } from '@/utils/competitionCode';
 
 export default function ScoutingScreen() {
   const {
@@ -21,7 +22,7 @@ export default function ScoutingScreen() {
       <Box className="px-4 pt-4 flex-1 max-w-2xl self-center w-full">
         <VStack space="md">
           <HStack className="items-center justify-between">
-            <Heading size="2xl">Records</Heading>
+            <Heading size="2xl">Teams</Heading>
             <HStack className="gap-1">
               <Center>
                 <ConnectionStatus
@@ -33,7 +34,7 @@ export default function ScoutingScreen() {
                 />
               </Center>
               <Badge size="lg" variant="solid" action="info">
-                <BadgeText>{competitionCode || 'N/A'}</BadgeText>
+                <BadgeText>{parseCompetitionCode(competitionCode)}</BadgeText>
               </Badge>
             </HStack>
           </HStack>

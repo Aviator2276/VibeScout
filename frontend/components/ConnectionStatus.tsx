@@ -8,6 +8,7 @@ import {
   WifiHigh,
   WifiLow,
   WifiOff,
+  WifiZero,
 } from 'lucide-react-native';
 import { Spinner } from './ui/spinner';
 
@@ -71,7 +72,7 @@ export function ConnectionStatus({
     } else if (ping < 1500) {
       return { action: 'error', icon: WifiLow, label: 'Bad' };
     } else {
-      return { action: 'error', icon: WifiOff, label: 'Poor' };
+      return { action: 'error', icon: WifiZero, label: 'Poor' };
     }
   };
 

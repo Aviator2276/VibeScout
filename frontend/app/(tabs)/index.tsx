@@ -5,6 +5,7 @@ import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { useApp } from '@/utils/AppContext';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
+import { parseCompetitionCode } from '@/utils/competitionCode';
 import { Badge, BadgeText } from '@/components/ui/badge';
 import { Box } from '@/components/ui/box';
 import { Card } from '@/components/ui/card';
@@ -39,7 +40,7 @@ export default function HomeScreen() {
               />
             </Center>
             <Badge size="lg" variant="solid" action="info">
-              <BadgeText>{competitionCode || 'N/A'}</BadgeText>
+              <BadgeText>{parseCompetitionCode(competitionCode)}</BadgeText>
             </Badge>
           </HStack>
         </HStack>

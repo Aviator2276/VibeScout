@@ -17,29 +17,124 @@ export class NoTeamNumberError extends Error {
 }
 
 /**
- * Get all teams for a competition
- * @returns Array of teams at the competition
- * @throws NoCompetitionCodeError if no competition code is set
+ * Cache teams from API to IndexedDB.
+ * Should be called once during app initialization or manually to refresh data.
+ * @returns The cached teams
  */
-export async function getTeams(): Promise<Team[]> {
+export async function cacheTeams(): Promise<Team[]> {
+  const competitionCode = (await db.config.get({ key: 'compCode' }))?.value;
+
+  if (!competitionCode) {
+    throw new NoCompetitionCodeError();
+  }
+
   try {
-    const competitionCode = (await db.config.get({ key: 'compCode' }))?.value;
-
-    if (!competitionCode) {
-      throw new NoCompetitionCodeError();
-    }
-
-    return await apiRequest<Team[]>(
+    const teams = await apiRequest<Team[]>(
       `/api/competitions/${competitionCode}/teams`,
     );
+
+    // Add competitionCode to each team for indexing
+    const teamsWithCompCode = teams.map((team) => ({
+      ...team,
+      competitionCode,
+    }));
+
+    // Clear existing teams for this competition and store new ones
+    await db.teams.where('competitionCode').equals(competitionCode).delete();
+    await db.teams.bulkPut(teamsWithCompCode);
+
+    return teams;
   } catch (error) {
-    console.error('Failed to fetch teams:', error);
+    console.error('Failed to cache teams:', error);
     throw error;
   }
 }
 
 /**
- * Get detailed information for a specific team at a competition
+ * Get all teams for a competition from IndexedDB cache.
+ * @returns Array of teams at the competition
+ * @throws NoCompetitionCodeError if no competition code is set
+ */
+export async function getTeams(): Promise<Team[]> {
+  const competitionCode = (await db.config.get({ key: 'compCode' }))?.value;
+
+  if (!competitionCode) {
+    throw new NoCompetitionCodeError();
+  }
+
+  try {
+    const teams = await db.teams
+      .where('competitionCode')
+      .equals(competitionCode)
+      .toArray();
+
+    return teams;
+  } catch (error) {
+    console.error('Failed to get teams from cache:', error);
+    throw error;
+  }
+}
+
+/**
+ * Cache team info for all teams from API to IndexedDB.
+ * Should be called once during app initialization or manually to refresh data.
+ * @returns The cached team info array
+ */
+export async function cacheTeamInfo(): Promise<TeamInfo[]> {
+  const competitionCode = (await db.config.get({ key: 'compCode' }))?.value;
+
+  if (!competitionCode) {
+    throw new NoCompetitionCodeError();
+  }
+
+  try {
+    // First get all teams to know which team info to fetch
+    const teams = await db.teams
+      .where('competitionCode')
+      .equals(competitionCode)
+      .toArray();
+
+    // Fetch team info for all teams (API returns array)
+    const teamInfoPromises = teams.map((team) =>
+      apiRequest<TeamInfo[]>(
+        `/api/team-info?team_number=${team.number}&competition_code=${competitionCode}`,
+      ),
+    );
+
+    const teamInfoResults = await Promise.allSettled(teamInfoPromises);
+
+    // Filter out failed requests, extract first element from array response, and validate
+    const teamInfoArray = teamInfoResults
+      .filter(
+        (result): result is PromiseFulfilledResult<TeamInfo[]> =>
+          result.status === 'fulfilled',
+      )
+      .map((result) => result.value[0])
+      .filter(
+        (info): info is TeamInfo =>
+          info !== undefined &&
+          info.team?.number !== undefined &&
+          info.competition?.code !== undefined,
+      );
+
+    // Clear existing team info for this competition and store new ones
+    await db.teamInfo.where('competition.code').equals(competitionCode).delete();
+    if (teamInfoArray.length > 0) {
+      await db.teamInfo.bulkPut(teamInfoArray);
+      console.log('Successfully stored team info');
+    } else {
+      console.log('No valid team info to store');
+    }
+
+    return teamInfoArray;
+  } catch (error) {
+    console.error('Failed to cache team info:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get detailed information for a specific team at a competition from IndexedDB cache.
  * @param teamNumber - The team number to get info for
  * @param competitionCode - Optional competition code (uses stored code if not provided)
  * @returns Detailed team information including stats
@@ -49,27 +144,30 @@ export async function getTeams(): Promise<Team[]> {
 export async function getTeamInfo(
   teamNumber: number,
   competitionCode?: string,
-): Promise<TeamInfo> {
+): Promise<TeamInfo | undefined> {
+  if (!teamNumber) {
+    throw new NoTeamNumberError();
+  }
+
+  let compCode = competitionCode;
+
+  if (!compCode) {
+    compCode = (await db.config.get({ key: 'compCode' }))?.value;
+  }
+
+  if (!compCode) {
+    throw new NoCompetitionCodeError();
+  }
+
   try {
-    if (!teamNumber) {
-      throw new NoTeamNumberError();
-    }
+    const teamInfo = await db.teamInfo
+      .where('[competition.code+team.number]')
+      .equals([compCode, teamNumber])
+      .first();
 
-    let compCode = competitionCode;
-    
-    if (!compCode) {
-      compCode = (await db.config.get({ key: 'compCode' }))?.value;
-    }
-
-    if (!compCode) {
-      throw new NoCompetitionCodeError();
-    }
-
-    return await apiRequest<TeamInfo>(
-      `/api/team-info?team_number=${teamNumber}&competition_code=${compCode}`,
-    );
+    return teamInfo;
   } catch (error) {
-    console.error('Failed to fetch team info:', error);
+    console.error('Failed to get team info from cache:', error);
     throw error;
   }
 }
