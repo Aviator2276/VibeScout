@@ -142,10 +142,10 @@ export async function getStorageBreakdown(): Promise<StorageBreakdown> {
       ]);
 
     // Estimation in Bytes
-    const avgConfigSize = 100;
-    const avgMatchSize = 2000;
-    const avgTeamSize = 150;
-    const avgTeamInfoSize = 1500;
+    const avgConfigSize = 50;
+    const avgMatchSize = 1250;
+    const avgTeamSize = 70;
+    const avgTeamInfoSize = 700;
 
     const configSize = configCount * avgConfigSize;
     const matchesSize = matchesCount * avgMatchSize;

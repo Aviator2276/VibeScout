@@ -11,6 +11,15 @@
  #         python DownloadVideoMatches.py /mnt/f "https://www.youtube.com/watch?v=941HA6kE9JQ" "21:30.10" 25 -u jdthebomb -k <key>
  #     If you did convert to base64
  #     python DownloadVideoMatches.py /mnt/f "https://www.youtube.com/watch?v=941HA6kE9JQ" "21:30.10" 25 -t <token>
+
+ # *****
+    Caleb Note: We may want to also install ffmpeg through python
+    so that it does not need to be installed on the device. Bryan,
+    we'll need to convert this to TBA and also use their match
+    schema... Currently, I'm doing modifications like cropping in
+    ffmpeg, but eventually I want to pipe this scripts output to
+    my current script so it's seamless.
+ # *****
 """
 import platform
 import argparse
@@ -66,7 +75,7 @@ def DownloadYoutubeVideoClip(url, folder, name, startTime, endTime):
             'temp': tmp                  # (Optional) Temporary download location
         },
         'outtmpl': name+'.%(ext)s', #'%(title)s.%(ext)s'
-        'format': 'best',
+        'format': "mp4",
         'download_ranges': download_range_func(None, [(startTime,endTime)]),
         'force_keyframes_at_cuts': True,
     }
