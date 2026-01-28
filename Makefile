@@ -10,6 +10,9 @@ init:
 backend:
 	cd vibescout_backend && uv run python manage.py runserver
 
+collectstatic:
+	cd vibescout_backend && uv run python manage.py collectstatic --noinput
+
 frontend:
 	cd frontend && npm start
 
