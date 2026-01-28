@@ -153,6 +153,7 @@ class Command(BaseCommand):
         # Build yt-dlp command
         cmd = [
             'yt-dlp',
+            '--cookies-from-browser', 'chrome',
             '--download-sections',
             f'*{start_formatted}-{end_formatted}',
             '-o', str(output_file),
