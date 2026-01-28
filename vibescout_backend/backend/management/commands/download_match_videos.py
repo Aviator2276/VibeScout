@@ -131,15 +131,8 @@ class Command(BaseCommand):
         # So to get stream time from unix timestamp, we subtract the offset
         video_start_time = match.start_match_time - offset - buffer
         
-        # Use actual match duration from end_match_time - start_match_time
-        if match.end_match_time > 0 and match.end_match_time > match.start_match_time:
-            video_end_time = match.end_match_time - offset + buffer
-        else:
-            # Fallback: estimate 3 minutes if end time not available
-            self.stdout.write(self.style.WARNING(
-                f'  Match {match.match_number}: No end_match_time, estimating 3 minutes'
-            ))
-            video_end_time = video_start_time + 180 + (2 * buffer)  # 3 minutes + buffers
+        # Static 2:30 match duration
+        video_end_time = video_start_time + 150 + (2 * buffer)  # 2:30 + buffers
         
         # Ensure times are positive
         if video_start_time < 0:
