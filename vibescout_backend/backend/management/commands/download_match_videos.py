@@ -165,6 +165,7 @@ class Command(BaseCommand):
                     'player_client': ['android'],
                 }
             },
+            'cookiesfrombrowser': ('chrome',),
             'paths': {
                 'home': str(output_path),
                 'temp': tmp
